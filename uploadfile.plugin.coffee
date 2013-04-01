@@ -1,3 +1,5 @@
+fs = require('fs')
+
 # Export
 module.exports = (BasePlugin) ->
   # Define
@@ -47,11 +49,12 @@ module.exports = (BasePlugin) ->
 				date = new Date()
 				file_id = date.getTime().toString()
 				dest_dir = @site?.uploadDir # + file_id
-				dest = dest_dir + "/" + req.files.file.name
+				dest = dest_dir + "/" # + req.files.file.name Gives error: Undefined name
+				console.log req.files
 		
 				fs.mkdir dest_dir, () =>
 					# read the file
-					doc_content = fs.readFile req.files.file.path, (err, data) =>
+					doc_content = fs.readFile req.files.file.path, (err, data) => # Gives error: Undefined Path
 						if not err
 							fs.writeFile dest, data, (err) =>
 								if not err
@@ -59,6 +62,7 @@ module.exports = (BasePlugin) ->
 									res.end("{'state' : true, 'id' : '" + file_id + "', 'name' :'" + file_id + "'}")
 									# delete the original file
 									fs.unlink(req.files.file.path)
+									
 
 			# Done
 			@
